@@ -1,5 +1,5 @@
-import bcrypt from "bcrypt";
-import jwt from "jsonwebtoken";
+var bcrypt = require("bcrypt");
+var jwt = require("jsonwebtoken")
 
 export default {
   Mutation: {

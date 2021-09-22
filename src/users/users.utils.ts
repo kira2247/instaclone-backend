@@ -1,8 +1,8 @@
-import * as jwt from "jsonwebtoken";
+var jwt = require("jsonwebtoken");
 import client from "../client";
 import { Resolver } from "../types";
 
-export const getUser = async (token) => {
+export const getUser = async (token: any) => {
     try {
         if (!token) {
             return null;
@@ -24,12 +24,17 @@ export const getUser = async (token) => {
     }
 }
 
-export const protectedResolver = (ourResolver: Resolver) => (root, args, context, info) => {
+export const protectedResolver = (ourResolver: Resolver) => (root: any, args: any, context: any, info: any) => {
     if (!context.loggedInUser) {
-        return {
-            ok: false,
-            error: "Please login to perform this action"
-        };
+        const query = info.operation.operation === "query";
+        if (query) {
+            return null
+        } else {
+            return {
+                ok: false,
+                error: "Please login to perform this action"
+            };
+        }
     }
     return ourResolver(root, args, context, info)
 }

@@ -1,4 +1,4 @@
-import bcrypt from "bcrypt";
+var bcrypt = require("bcrypt");
 
 export default {
   Mutation: {
@@ -35,6 +35,8 @@ export default {
             password: hashedPassword,
           },
         });
+
+        
 
         // save and return new user
       } catch (e) {

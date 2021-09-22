@@ -18,9 +18,77 @@ model User {
   email     String    @unique
   password  String
   bio       String?
-  avatar    String?  
+  avatar    String?
+  photos    Photo[]
+  likes     Like[]
+  comment   Comment[]
+  rooms     Room[]
   followers User[]    @relation("FollowRelation", references: [id])
-  following User[]    @relation("FollowRelation", references: [id])  
+  following User[]    @relation("FollowRelation", references: [id])
   createdAt DateTime  @default(now())
   updatedAt DateTime  @updatedAt
+  message   Message[]
+}
+
+model Photo {
+  id        Int       @id @default(autoincrement())
+  user      User      @relation(fields: [userId], references: [id])
+  userId    Int
+  file      String
+  caption   String?
+  hashtags  HashTag[]
+  comment   Comment[]
+  likes     Like[]
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+}
+
+model HashTag {
+  id        Int      @id @default(autoincrement())
+  hashtag   String   @unique
+  photos    Photo[]
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model Like {
+  id        Int      @id @default(autoincrement())
+  photo     Photo    @relation(fields: [photoId], references: [id])
+  user      User     @relation(fields: [userId], references: [id])
+  photoId   Int
+  userId    Int
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@unique([photoId, userId])
+}
+
+model Comment {
+  id        Int      @id @default(autoincrement())
+  photo     Photo    @relation(fields: [photoId], references: [id])
+  user      User     @relation(fields: [userId], references: [id])
+  photoId   Int
+  userId    Int
+  payload   String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model Room {
+  id        Int       @id @default(autoincrement())
+  users     User[]
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+  message   Message[]
+}
+
+model Message {
+  id        Int      @id @default(autoincrement())
+  user      User     @relation(fields: [userId], references: [id])
+  room      Room     @relation(fields: [roomId], references: [id])
+  userId    Int
+  roomId    Int
+  payload   String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 }
